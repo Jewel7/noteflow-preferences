@@ -2,7 +2,7 @@ services:
   wiremock:
     image: wiremock/wiremock:latest
     ports:
-      -"5000:8080"
+      - "5001:8080"
     volumes:
       - ./src/test/resources/wiremock:/home/wiremock
     command:
@@ -10,9 +10,9 @@ services:
   minio:
     image: "minio/minio:RELEASE.2024-01-29T03-56-32Z"
     ports:
-#      MINIO CONSOLE API AND GUI
+      #      MINIO CONSOLE API AND GUI
       - "9000:9000"
-      - "9000:90001"
+      - "9001:9001"
     volumes:
       - './minio_data:/data'
     environment:

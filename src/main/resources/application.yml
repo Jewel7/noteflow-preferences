@@ -1,0 +1,34 @@
+noteflow:
+  preferences:
+    s3:
+      bucket-name: preferences
+  openApi:
+    contact:
+      name: Noteflow
+      url: https://noteflow.io
+      email: ""
+    title: Noteflow API
+    description: Noteflow API
+
+    contactName: Noteflow
+    contactUrl: https://noteflow.io
+    contactEmail: ""
+    version: 1.0.0
+spring:
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+    mapper:
+      accept-case-insensitive-enums: true
+      sort-properties-alphabetically: true
+
+#https://springdoc.org/#swagger-ui-properties
+springdoc:
+  swagger-ui:
+    path: docs/swagger-ui.html
+  show-actuator: true
+  version: 1.0.0

@@ -27,3 +27,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Minio Data ###
+minio_data/
+
+### Java ###
+target/
