@@ -28,6 +28,7 @@ public class OpenApiConfig {
                 .email(contactProps.getEmail());
 
         // add all the Swagger properties
+        //TODO: set up security scheme
         openAPI.components(new Components()
                         .addSecuritySchemes("basicScheme", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP).scheme("basic"))
