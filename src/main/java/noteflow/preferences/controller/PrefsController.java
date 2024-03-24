@@ -7,15 +7,13 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import noteflow.preferences.PrefsService;
 import noteflow.preferences.model.PrefsErrorResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -59,5 +57,17 @@ class PrefsController {
         //TODO: get user key from request
 //        String userKey
         prefsService.storePrefs(jsonMap, "userKey");
+    }
+
+    @GetMapping("/")
+    @ResponseBody
+    public String getPrefs(HttpServletResponse response) {
+        // the HttpServletResponse is Spring's way of allowing you alter response
+//        String userKey = "userKey";
+        String prefs = prefsService.retrievePrefs("userKey");
+        if (prefs.isEmpty()) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+        }
+        return prefs;
     }
 }
