@@ -1,4 +1,4 @@
-package noteflow.preferences;
+package noteflow.preferences.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,7 +26,7 @@ public class PrefsService {
      * Store the preferences as a string to S3
      *
      * @param jsonMap a map of the JSON object obtained from the request body
-     * @param key
+     * @param key     the unique ID used to store the preferences
      * @throws InvalidUserPrefsException   if the preferences are invalid
      * @throws UnableToStorePrefsException if the preferences could not be stored
      */

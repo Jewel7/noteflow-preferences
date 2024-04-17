@@ -1,5 +1,6 @@
 package noteflow.preferences.repository;
 
+import io.awspring.cloud.s3.S3Exception;
 import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,8 @@ public class S3Repository {
         try {
             log.info("Storing prefs to S3");
             s3Template.store(s3Properties.getBucketName(), key, prefs);
-        } catch (Exception e) {
-            log.error("Error storing prefs to S3", e);
+        } catch (S3Exception e) {
+            log.error("Error storing prefs to S3: ", e);
             throw new UnableToStorePrefsException();
         }
     }
@@ -47,9 +48,10 @@ public class S3Repository {
         try {
             log.info("Reading prefs from S3");
             return s3Template.read(s3Properties.getBucketName(), key, String.class);
-        } catch (Exception e) {
+        } catch (S3Exception e) {
             //if no preferences were found in the repo for the user, return an empty string
             if (e.getCause().toString().contains(NoSuchKeyException.class.getSimpleName())) {
+                log.info("No prefs found in S3 for user: " + e.getCause().toString());
                 return "";
             } else {
                 log.error("Error reading prefs from S3", e);

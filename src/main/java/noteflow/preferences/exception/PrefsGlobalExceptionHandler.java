@@ -17,20 +17,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Order(Ordered.HIGHEST_PRECEDENCE)
 //TODO: what is @Order for?
 public class PrefsGlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(UnableToReadPrefsException.class)
-    public ResponseEntity<Object> handleUnableToReadPrefsException(UnableToReadPrefsException ex, final WebRequest request) {
-        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    @ExceptionHandler(InvalidUserPrefsException.class)
+    public ResponseEntity<Object> handleInvalidUserPrefsException(final InvalidUserPrefsException ex, final WebRequest request) {
+        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(UnableToStorePrefsException.class)
-    public ResponseEntity<Object> handleUnableToStorePrefsException(UnableToStorePrefsException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleUnableToStorePrefsException(final UnableToStorePrefsException ex, final WebRequest request) {
         return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    @ExceptionHandler(InvalidUserPrefsException.class)
-    public ResponseEntity<Object> handleInvalidUserPrefsException(InvalidUserPrefsException ex, final WebRequest request) {
-        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    @ExceptionHandler(UnableToReadPrefsException.class)
+    public ResponseEntity<Object> handleUnableToReadPrefsException(final UnableToReadPrefsException ex, final WebRequest request) {
+        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
+
+    //TODO: make an exception later to handle UserKeyNotFoundException
+
 
     /**
      * Every exception handled calls this method.
