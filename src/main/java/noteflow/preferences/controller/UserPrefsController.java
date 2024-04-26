@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import noteflow.preferences.model.PrefsErrorResponse;
-import noteflow.preferences.service.PrefsService;
+import noteflow.preferences.model.UserPrefsErrorResponse;
+import noteflow.preferences.service.UserPrefsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +23,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 //TODO: @Timed annotation
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-class PrefsController {
+public class UserPrefsController {
 
 
     //TODO: make my own private final SecurityContextAuthenticationFacade securityContextAuthenticationFacade;
-    private final PrefsService prefsService;
+    private final UserPrefsService userPrefsService;
 
     /**
      * Method to handle posting the user's preferences
@@ -48,15 +48,15 @@ class PrefsController {
                     description = "The user's preferences weren't saved because they were invalid.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = PrefsErrorResponse.class))),
+                            schema = @Schema(implementation = UserPrefsErrorResponse.class))),
             @ApiResponse(
                     responseCode = "401",
                     description = "There was a problem with the user's identity",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = PrefsErrorResponse.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserPrefsErrorResponse.class))),
             @ApiResponse(
                     responseCode = "500",
                     description = "Unable to store preferences to the repo.",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = PrefsErrorResponse.class)))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserPrefsErrorResponse.class)))
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void postPrefs(
@@ -69,7 +69,7 @@ class PrefsController {
             //default required=true
             @RequestBody Map<String, Object> jsonMap) {
         //TODO: get user key from request.. String userKey = securityContextAuthenticationFacade.getUserKey();
-        prefsService.storePrefs(jsonMap, "userKey");
+        userPrefsService.storePrefs(jsonMap, "userKey");
     }
 
     /**
@@ -100,13 +100,13 @@ class PrefsController {
                     description = "There was a problem with the user's identity",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = PrefsErrorResponse.class))),
+                            schema = @Schema(implementation = UserPrefsErrorResponse.class))),
             @ApiResponse(
                     responseCode = "500",
                     description = "Unable to retrieve preferences from the repo.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = PrefsErrorResponse.class))
+                            schema = @Schema(implementation = UserPrefsErrorResponse.class))
             )
     })
     @GetMapping("/")
@@ -114,7 +114,7 @@ class PrefsController {
     public String getPrefs(HttpServletResponse response) {
         // the HttpServletResponse is Spring's way of allowing you alter response
 //        String userKey = securityContextAuthenticationFacade.getUserKey();
-        String prefs = prefsService.retrievePrefs("userKey");
+        String prefs = userPrefsService.retrievePrefs("userKey");
         if (prefs.isEmpty()) {
             response.setStatus(HttpStatus.NO_CONTENT.value());
         }

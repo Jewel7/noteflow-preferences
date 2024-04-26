@@ -1,7 +1,7 @@
 package noteflow.preferences.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import noteflow.preferences.model.PrefsErrorResponse;
+import noteflow.preferences.model.UserPrefsErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.*;
@@ -16,19 +16,19 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 //TODO: what is @Order for?
-public class PrefsGlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class UserPrefsGlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidUserPrefsException.class)
     public ResponseEntity<Object> handleInvalidUserPrefsException(final InvalidUserPrefsException ex, final WebRequest request) {
         return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(UnableToStorePrefsException.class)
-    public ResponseEntity<Object> handleUnableToStorePrefsException(final UnableToStorePrefsException ex, final WebRequest request) {
+    @ExceptionHandler(UnableToStoreUserPrefsException.class)
+    public ResponseEntity<Object> handleUnableToUserStorePrefsException(final UnableToStoreUserPrefsException ex, final WebRequest request) {
         return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    @ExceptionHandler(UnableToReadPrefsException.class)
-    public ResponseEntity<Object> handleUnableToReadPrefsException(final UnableToReadPrefsException ex, final WebRequest request) {
+    @ExceptionHandler(UnableToReadUserPrefsException.class)
+    public ResponseEntity<Object> handleUnableToReadUserPrefsException(final UnableToReadUserPrefsException ex, final WebRequest request) {
         return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
@@ -55,12 +55,12 @@ public class PrefsGlobalExceptionHandler extends ResponseEntityExceptionHandler 
             HttpStatusCode statusCode,
             WebRequest request) {
         //create the parameters needed for the response entity
-        PrefsErrorResponse prefsErrorResponse = createErrorResponse(statusCode, ((ServletWebRequest) request).getRequest().getRequestURI(), ex);
+        UserPrefsErrorResponse userPrefsErrorResponse = createErrorResponse(statusCode, ((ServletWebRequest) request).getRequest().getRequestURI(), ex);
         HttpHeaders newHeaders = new HttpHeaders();
         newHeaders.addAll(headers);
         newHeaders.setContentType(MediaType.APPLICATION_JSON);
-        log.info("Exception handled:\n%s".formatted(prefsErrorResponse));
-        return createResponseEntity(prefsErrorResponse, newHeaders, statusCode, request);
+        log.info("Exception handled:\n%s".formatted(userPrefsErrorResponse));
+        return createResponseEntity(userPrefsErrorResponse, newHeaders, statusCode, request);
     }
 
 
@@ -72,9 +72,9 @@ public class PrefsGlobalExceptionHandler extends ResponseEntityExceptionHandler 
      * @param ex         The {@link Exception} that was thrown
      * @return An error response that has the thrown exception's message, status code, and status message
      */
-    private PrefsErrorResponse createErrorResponse(HttpStatusCode statusCode, String requestURI, Exception ex) {
+    private UserPrefsErrorResponse createErrorResponse(HttpStatusCode statusCode, String requestURI, Exception ex) {
         HttpStatus httpStatus = HttpStatus.resolve(statusCode.value());
-        return PrefsErrorResponse.builder()
+        return UserPrefsErrorResponse.builder()
                 .uri(requestURI)
                 .reason(ex.getMessage())
                 .statusCode(statusCode.value())

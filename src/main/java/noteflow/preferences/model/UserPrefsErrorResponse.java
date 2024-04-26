@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PrefsErrorResponse {
+public class UserPrefsErrorResponse {
     private String uri;
     private String reason;
     private int statusCode;

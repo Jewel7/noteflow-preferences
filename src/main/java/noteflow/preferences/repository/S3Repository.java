@@ -5,8 +5,8 @@ import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import noteflow.preferences.config.S3Properties;
-import noteflow.preferences.exception.UnableToReadPrefsException;
-import noteflow.preferences.exception.UnableToStorePrefsException;
+import noteflow.preferences.exception.UnableToReadUserPrefsException;
+import noteflow.preferences.exception.UnableToStoreUserPrefsException;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
@@ -25,15 +25,15 @@ public class S3Repository {
      *
      * @param prefs the user's preferences
      * @param key   the unique ID used to store the preferences
-     * @throws UnableToStorePrefsException if the preferences could not be stored
+     * @throws UnableToStoreUserPrefsException if the preferences could not be stored
      */
-    public void storePrefsToS3(String prefs, final String key) {
+    public void storeUserPrefsToS3(String prefs, final String key) {
         try {
             log.info("Storing prefs to S3");
             s3Template.store(s3Properties.getBucketName(), key, prefs);
         } catch (S3Exception e) {
             log.error("Error storing prefs to S3: ", e);
-            throw new UnableToStorePrefsException();
+            throw new UnableToStoreUserPrefsException();
         }
     }
 
@@ -42,7 +42,7 @@ public class S3Repository {
      *
      * @param key the unique ID used to store the preferences
      * @return the user's preferences
-     * @throws UnableToReadPrefsException if the preferences could not be read
+     * @throws UnableToReadUserPrefsException if the preferences could not be read
      */
     public String readUserPrefsFromS3(final String key) {
         try {
@@ -55,7 +55,7 @@ public class S3Repository {
                 return "";
             } else {
                 log.error("Error reading prefs from S3", e);
-                throw new UnableToStorePrefsException();
+                throw new UnableToStoreUserPrefsException();
             }
         }
     }
